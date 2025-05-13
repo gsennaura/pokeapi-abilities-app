@@ -40,3 +40,11 @@ test-integration:
 # Rodar testes localmente (fora do Docker)
 test-local:
 	npm test
+
+FRONTEND_SERVICE := frontend
+
+dev-frontend:
+	docker-compose run $(FRONTEND_SERVICE)
+
+build-frontend:
+	docker-compose build $(FRONTEND_SERVICE)
