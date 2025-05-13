@@ -1,0 +1,28 @@
+# Node.js
+node_modules/
+dist/
+.env
+*.log
+npm-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Jest
+jest.cache/
+
+# Docker
+*.local
+docker-compose.override.yml
+
+# Editor/IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
