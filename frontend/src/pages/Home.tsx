@@ -1,35 +1,46 @@
 import { useEffect, useState } from "react";
 import { PokemonList } from "../components/PokemonList";
+import { SearchForm } from "../components/SearchForm";
 import { useNavigate } from "react-router-dom";
 
 export const Home = () => {
   const [pokemons, setPokemons] = useState<string[]>([]);
+  const [filtered, setFiltered] = useState<string[]>([]);
+  const [page, setPage] = useState(0);
+  const limit = 20;
   const navigate = useNavigate();
 
+  const fetchPokemons = async (offset = 0) => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3001"}/api/pokemons?limit=${limit}&offset=${offset}`);
+      const data = await res.json();
+      const names = data.results.map((p: { name: string }) => p.name);
+      setPokemons(names);
+      setFiltered(names);
+    } catch (error) {
+      console.error("Failed to fetch pokemons:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchPokemons = async () => {
-      try {
-        const res = await fetch("http://localhost:3001/api/pokemons");
-        const data = await res.json();
-        const names = data.results.map((p: { name: string }) => p.name);
-        setPokemons(names);
-      } catch (error) {
-        console.error("Failed to fetch pokemons:", error);
-      }
-    };
+    fetchPokemons(page * limit);
+  }, [page]);
 
-    fetchPokemons();
-  }, []);
-
-  const handleSelect = (name: string) => {
-    navigate(`/pokemon/${name}`);
+  const handleSelect = (name: string) => navigate(`/pokemon/${name}`);
+  const handleSearch = (term: string) => {
+    if (!term.trim()) return setFiltered(pokemons);
+    setFiltered(pokemons.filter((p) => p.includes(term.toLowerCase())));
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-center mb-6">Pokémon List</h1>
-        <PokemonList pokemons={pokemons} onSelect={handleSelect} />
+    <div className="container">
+      <h1>Pokémon List</h1>
+      <SearchForm onSearch={handleSearch} />
+      <PokemonList pokemons={filtered} onSelect={handleSelect} />
+      <div className="pagination">
+        <button disabled={page === 0} onClick={() => setPage((p) => p - 1)}>Anterior</button>
+        <span>Página {page + 1}</span>
+        <button onClick={() => setPage((p) => p + 1)}>Próxima</button>
       </div>
     </div>
   );

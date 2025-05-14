@@ -1,50 +1,49 @@
 SHELL := /bin/sh
 BACKEND_SERVICE := backend
+FRONTEND_SERVICE := frontend
 
-# Subir containers
+.PHONY: up dev-shell clean build rebuild compile test test-unit test-integration test-local dev-frontend build-frontend init init-backend init-frontend
+
 up:
 	docker-compose up
 
-# Acessar shell do backend
 dev-shell:
-	docker-compose run $(BACKEND_SERVICE)
+	docker-compose run --rm $(BACKEND_SERVICE) sh
 
-# Derrubar containers e volumes
 clean:
 	docker-compose down -v --remove-orphans
 
-# Build dos containers
 build:
 	docker-compose build
 
-# Rebuild forçado
 rebuild: clean
 	docker-compose build --no-cache
 
-# Compilar TypeScript no container
 compile:
-	docker-compose run $(BACKEND_SERVICE) npm run build
+	docker-compose run --rm $(BACKEND_SERVICE) npm run build
 
-# Rodar todos os testes
 test:
-	docker-compose run $(BACKEND_SERVICE) npm test
+	docker-compose run --rm $(BACKEND_SERVICE) npm test
 
-# Rodar apenas testes unitários (caso configure o script)
 test-unit:
-	docker-compose run $(BACKEND_SERVICE) npm run test:unit
+	docker-compose run --rm $(BACKEND_SERVICE) npm run test:unit
 
-# Rodar apenas testes de integração (caso configure o script)
 test-integration:
-	docker-compose run $(BACKEND_SERVICE) npm run test:integration
+	docker-compose run --rm $(BACKEND_SERVICE) npm run test:integration
 
-# Rodar testes localmente (fora do Docker)
 test-local:
 	npm test
 
-FRONTEND_SERVICE := frontend
-
 dev-frontend:
-	docker-compose run $(FRONTEND_SERVICE)
+	docker-compose run --rm -p 5173:5173 $(FRONTEND_SERVICE)
 
 build-frontend:
 	docker-compose build $(FRONTEND_SERVICE)
+
+init: init-backend init-frontend
+
+init-backend:
+	docker-compose run --rm $(BACKEND_SERVICE) npm install
+
+init-frontend:
+	docker-compose run --rm $(FRONTEND_SERVICE) npm install

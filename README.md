@@ -1,117 +1,67 @@
 # PokeAPI Abilities App
 
-This is a fullstack project that consumes the [PokeAPI](https://pokeapi.co) to retrieve Pokémon data such as abilities and listing. It follows **Clean Architecture**, **SOLID**, and **DDD** principles where applicable. The project is fully containerized with Docker and designed with testability, separation of concerns, and developer experience in mind.
+Este é um projeto fullstack que consome a [PokeAPI](https://pokeapi.co) para listar Pokémons e exibir suas habilidades. O backend foi construído com Node.js + Express, seguindo princípios de **Clean Architecture**, **SOLID** e **DDD**. O frontend utiliza **React + Vite**, com foco em separação de responsabilidades e estrutura limpa.
+
+O projeto é completamente containerizado com Docker e possui automação via `Makefile` para facilitar o desenvolvimento.
 
 ---
 
-## Technologies
+## Observações Pessoais
 
-- Node.js
-- TypeScript
-- Express
-- Docker & Docker Compose
-- ts-node-dev
-- Jest (unit and integration testing)
-- Supertest (for HTTP tests)
-- Swagger (OpenAPI documentation)
+Devido ao tempo escasso, não consegui dedicar tanto tempo ao frontend quanto gostaria. Algumas melhorias ainda podem ser implementadas, como testes automatizados, reorganização da estrutura de componentes e ajustes visuais.
+
+No backend, há espaço para evoluções no código, especialmente em termos de desacoplamento, validações e refinamento de alguns casos de uso.
+
+Ainda pretendo fazer essas melhorias à medida que houver mais disponibilidade.
+
+Na pasta `prints/` estão incluídas imagens que comprovam o funcionamento da aplicação, como a listagem dos Pokémons, a visualização das habilidades e a documentação via Swagger.
 
 ---
 
-## Project Structure
+## Tecnologias Utilizadas
+
+- **Backend:** Node.js, TypeScript, Express, Jest, Swagger, Docker
+- **Frontend:** React, Vite, TypeScript, CSS global simples
+- **Infra:** Docker, Docker Compose, Makefile
+
+---
+
+## Estrutura do Projeto
 
 ```
 pokeapi-abilities-app/
-├── backend/
-│   ├── src/
-│   ├── tests/
-│   ├── Dockerfile
-│   ├── jest.config.ts
-│   ├── tsconfig.json
-│   └── ...
-├── .github/
-│   └── workflows/
-│       └── ci.yml
-├── docker-compose.yml
-├── Makefile
-└── README.md
+├── backend/              # API Express com TypeScript
+├── frontend/             # Interface React com Vite
+├── prints/               # Imagens de uso e testes
+├── docker-compose.yml    # Orquestração dos containers
+├── Makefile              # Atalhos para build, up, test, etc.
+└── README.md             # Documentação
 ```
 
 ---
 
-## Getting Started
+## Como Executar
 
-### 1. Clone the repository
+### Com Docker + Makefile
 
+1. Suba tudo com cache limpo:
 ```bash
-git clone https://github.com/gsennaura/pokeapi-abilities-app.git
-cd pokeapi-abilities-app
-make rebuild
+make clean
+make build
+make init
 make up
 ```
 
-Expected output:
-
-```
-> app@1.0.0 dev
-> ts-node-dev --respawn --transpile-only src/main.ts
-
-Server is running on port 3001
-```
+2. Acesse:
+- API: [http://localhost:3001/api](http://localhost:3001/api)
+- Swagger: [http://localhost:3001/api/docs](http://localhost:3001/api/docs)
+- Frontend: [http://localhost:5173](http://localhost:5173)
 
 ---
 
-## Testing the API
+### Rodando manualmente sem Docker
 
-### Health Check
-
-```bash
-curl http://localhost:3001/api/health
-```
-
-Response:
-
-```json
-{ "status": "ok" }
-```
-
-### Pokémon Abilities
-
-```bash
-curl http://localhost:3001/api/pokemons/pikachu/abilities
-```
-
-Response:
-
-```json
-{
-  "pokemon": "pikachu",
-  "abilities": ["lightning-rod", "static"]
-}
-```
-
-### List Pokémons
-
-```bash
-curl http://localhost:3001/api/pokemons
-```
-
-Response:
-
-```json
-{
-  "count": 1302,
-  "next": "https://pokeapi.co/api/v2/pokemon?offset=20&limit=20",
-  "previous": null,
-  "results": [
-    { "name": "bulbasaur", "url": "https://pokeapi.co/api/v2/pokemon/1/" },
-    ...
-  ]
-}
-```
-
----
-
-### Running Locally Without Docker
+#### Backend
 
 ```bash
 cd backend
@@ -119,70 +69,70 @@ npm install
 npm run dev
 ```
 
----
-
-## Running Tests
-
-### Unit Tests
+#### Frontend
 
 ```bash
-npm run test:unit
+cd frontend
+npm install
+npm run dev
 ```
 
-### Integration Tests
+---
+
+## Exemplos de Uso
+
+### Listar Pokémons
+
+```
+GET /api/pokemons
+```
+
+### Habilidades de um Pokémon
+
+```
+GET /api/pokemons/{pokemon}/abilities
+```
+
+---
+
+## Prints do Funcionamento
+
+| Swagger (API docs) | Frontend (Listagem) | Frontend (Detalhes) |
+|--------------------|---------------------|----------------------|
+| ![Swagger](prints/swagger_results1.png) | ![Listagem](prints/pokemon_list_frontend1.png) | ![Detalhes](prints/pokemon_abiliies.png) |
+
+---
+
+## Principais Comandos do Make
+
+| Comando              | Descrição                                      |
+|----------------------|-----------------------------------------------|
+| `make build`         | Build dos containers com cache                |
+| `make rebuild`       | Build dos containers sem cache                |
+| `make init`          | Instala dependências nos containers           |
+| `make up`            | Sobe a aplicação em modo dev                  |
+| `make clean`         | Remove containers, volumes e rede             |
+| `make test`          | Roda todos os testes do backend               |
+| `make dev-shell`     | Entra no shell interativo do backend          |
+
+---
+
+## Testes
+
+### Unitários
 
 ```bash
-npm run test:integration
+make test-unit
+```
+
+### Integração
+
+```bash
+make test-integration
 ```
 
 ---
 
-## Continuous Integration
-
-This project uses GitHub Actions for CI/CD. The workflow is triggered on pushes and pull requests to the `main` and `develop` branches. It runs both unit and integration tests automatically.
-
-Workflow location:
-```
-.github/workflows/ci.yml
-```
-
----
-
-## Useful Make Commands
-
-| Command          | Description                                     |
-|------------------|-------------------------------------------------|
-| `make up`        | Start the development server                    |
-| `make build`     | Build container using cache                     |
-| `make rebuild`   | Rebuild container from scratch (no cache)       |
-| `make clean`     | Stop and remove containers, volumes, networks   |
-| `make compile`   | Compile the TypeScript project                  |
-| `make dev-shell` | Open an interactive shell in the backend        |
-| `make test`      | Run all tests inside the container              |
-
----
-
-## Architecture Overview
-
-This project follows Clean Architecture principles, along with SOLID and DDD where applicable. Below is a high-level summary of key layers:
-
-### 1. Route
-- Maps HTTP endpoints to controller methods
-
-### 2. Controller
-- Handles incoming HTTP requests and produces responses
-- Validates inputs and delegates logic to use cases
-
-### 3. Use Case
-- Orchestrates application logic
-- Contains business rules and coordinates services
-
-### 4. Service
-- Communicates with external systems (e.g. PokéAPI)
-- Does not contain business logic
-
----
-
-## License
+## Licença
 
 MIT

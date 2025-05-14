@@ -10,7 +10,7 @@ export const PokemonDetails = () => {
   useEffect(() => {
     const fetchAbilities = async () => {
       try {
-        const res = await fetch(`http://localhost:3001/api/pokemons/${name}/abilities`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3001"}/api/pokemons/${name}/abilities`);
         const data = await res.json();
         setAbilities(data.abilities);
       } catch (error) {
