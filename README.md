@@ -1,84 +1,138 @@
 # PokeAPI Abilities App
 
-This is a fullstack project that consumes the [PokeAPI](https://pokeapi.co) to retrieve Pokémon abilities. It follows **Clean Architecture**, **SOLID**, and **DDD** principles where applicable. The project is built entirely using Docker and is designed for developer productivity and clean code.
+Este é um projeto fullstack que consome a [PokeAPI](https://pokeapi.co) para listar Pokémons e exibir suas habilidades. O backend foi construído com Node.js + Express, seguindo princípios de **Clean Architecture**, **SOLID** e **DDD**. O frontend utiliza **React + Vite**, com foco em separação de responsabilidades e estrutura limpa.
+
+O projeto é completamente containerizado com Docker e possui automação via `Makefile` para facilitar o desenvolvimento.
 
 ---
 
-## Technologies
+## Observações Pessoais
 
-- Node.js
-- TypeScript
-- Express
-- Docker & Docker Compose
-- ts-node-dev
+Devido ao tempo escasso, não consegui dedicar tanto tempo ao frontend quanto gostaria. Algumas melhorias ainda podem ser implementadas, como testes automatizados, reorganização da estrutura de componentes e ajustes visuais.
+
+No backend, há espaço para evoluções no código, especialmente em termos de desacoplamento, validações e refinamento de alguns casos de uso.
+
+Ainda pretendo fazer essas melhorias à medida que houver mais disponibilidade.
+
+Na pasta `prints/` estão incluídas imagens que comprovam o funcionamento da aplicação, como a listagem dos Pokémons, a visualização das habilidades e a documentação via Swagger.
 
 ---
 
-## Project Structure
+## Tecnologias Utilizadas
+
+- **Backend:** Node.js, TypeScript, Express, Jest, Swagger, Docker
+- **Frontend:** React, Vite, TypeScript, CSS global simples
+- **Infra:** Docker, Docker Compose, Makefile
+
+---
+
+## Estrutura do Projeto
 
 ```
 pokeapi-abilities-app/
-├── backend/
-│   ├── src/
-│   ├── Dockerfile
-│   └── ...
-├── docker-compose.yml
-├── Makefile
-└── README.md
+├── backend/              # API Express com TypeScript
+├── frontend/             # Interface React com Vite
+├── prints/               # Imagens de uso e testes
+├── docker-compose.yml    # Orquestração dos containers
+├── Makefile              # Atalhos para build, up, test, etc.
+└── README.md             # Documentação
 ```
 
 ---
 
-## Getting Started
+## Como Executar
 
-### 1. Clone the repository
+### Com Docker + Makefile
 
+1. Suba tudo com cache limpo:
 ```bash
-git clone https://github.com/gsennaura/pokeapi-abilities-app.git
-cd pokeapi-abilities-app
-make rebuild
+make clean
+make build
+make init
 make up
 ```
 
-You should see output similar to:
-
-```
-> app@1.0.0 dev
-> ts-node-dev --respawn --transpile-only src/main.ts
-
-[INFO] ts-node-dev ver. X.X.X
-Server is running on port 3001
-```
+2. Acesse:
+- API: [http://localhost:3001/api](http://localhost:3001/api)
+- Swagger: [http://localhost:3001/api/docs](http://localhost:3001/api/docs)
+- Frontend: [http://localhost:5173](http://localhost:5173)
 
 ---
 
-### Test the API
+### Rodando manualmente sem Docker
+
+#### Backend
 
 ```bash
-curl http://localhost:3001/api/health
+cd backend
+npm install
+npm run dev
 ```
 
-Expected response:
+#### Frontend
 
-```json
-{ "status": "ok" }
+```bash
+cd frontend
+npm install
+npm run dev
 ```
 
 ---
 
-## Useful Make Commands
+## Exemplos de Uso
 
-| Command         | Description                                     |
-|-----------------|-------------------------------------------------|
-| `make up`       | Start the development server                    |
-| `make build`    | Build container using cache                     |
-| `make rebuild`  | Rebuild container from scratch (no cache)       |
-| `make clean`    | Stop and remove containers, volumes, networks   |
-| `make compile`  | Compile the TypeScript project                  |
-| `make dev-shell`| Open an interactive shell in the backend        |
+### Listar Pokémons
+
+```
+GET /api/pokemons
+```
+
+### Habilidades de um Pokémon
+
+```
+GET /api/pokemons/{pokemon}/abilities
+```
 
 ---
 
-## License
+## Prints do Funcionamento
+
+| Swagger (API docs) | Frontend (Listagem) | Frontend (Detalhes) |
+|--------------------|---------------------|----------------------|
+| ![Swagger](prints/swagger_results1.png) | ![Listagem](prints/pokemon_list_frontend1.png) | ![Detalhes](prints/pokemon_abiliies.png) |
+
+---
+
+## Principais Comandos do Make
+
+| Comando              | Descrição                                      |
+|----------------------|-----------------------------------------------|
+| `make build`         | Build dos containers com cache                |
+| `make rebuild`       | Build dos containers sem cache                |
+| `make init`          | Instala dependências nos containers           |
+| `make up`            | Sobe a aplicação em modo dev                  |
+| `make clean`         | Remove containers, volumes e rede             |
+| `make test`          | Roda todos os testes do backend               |
+| `make dev-shell`     | Entra no shell interativo do backend          |
+
+---
+
+## Testes
+
+### Unitários
+
+```bash
+make test-unit
+```
+
+### Integração
+
+```bash
+make test-integration
+```
+
+---
+
+## Licença
 
 MIT

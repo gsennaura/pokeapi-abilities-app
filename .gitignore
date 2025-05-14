@@ -1,0 +1,30 @@
+# Node.js
+node_modules/
+.env
+dist/
+build/
+*.log
+npm-debug.log*
+
+# Vite
+.vite/
+
+# IDEs/Editors
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+*.tsbuildinfo
+
+# Docker
+**/.dockerignore
+**/Dockerfile
+
+# Others
+*.local
+*.swp
