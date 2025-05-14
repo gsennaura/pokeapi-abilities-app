@@ -18,7 +18,7 @@ export function SearchForm({ onSearch }: Props) {
     <form onSubmit={handleSubmit} className="flex items-center gap-4 mb-6">
       <input
         type="text"
-        placeholder="Enter Pokémon name"
+        placeholder="Enter Pokémon name (Just filter in current page)"
         value={pokemon}
         onChange={(e) => setPokemon(e.target.value)}
         className="border border-gray-300 px-4 py-2 rounded-lg w-full"

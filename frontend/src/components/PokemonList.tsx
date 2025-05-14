@@ -6,12 +6,10 @@ interface PokemonListProps {
   onSelect: (name: string) => void;
 }
 
-export const PokemonList: React.FC<PokemonListProps> = ({ pokemons, onSelect }) => {
-  return (
-    <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
-      {pokemons.map((name) => (
-        <PokemonCard key={name} name={name} onClick={() => onSelect(name)} />
-      ))}
-    </div>
-  );
-};
+export const PokemonList: React.FC<PokemonListProps> = ({ pokemons, onSelect }) => (
+  <div className="pokemon-list">
+    {pokemons.map((name) => (
+      <PokemonCard key={name} name={name} onClick={() => onSelect(name)} />
+    ))}
+  </div>
+);

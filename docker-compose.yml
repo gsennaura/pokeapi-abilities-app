@@ -2,10 +2,10 @@ version: "3.8"
 
 services:
   backend:
-    command: npm run dev
     build:
       context: ./backend
     container_name: pokeapi-backend
+    command: npm run dev
     ports:
       - "3001:3001"
     volumes:
@@ -14,9 +14,9 @@ services:
     tty: true
 
   frontend:
-    container_name: pokeapi-frontend
     build:
       context: ./frontend
+    container_name: pokeapi-frontend
     command: npm run dev
     ports:
       - "5173:5173"
@@ -24,4 +24,5 @@ services:
       - ./frontend:/app
       - /app/node_modules
     tty: true
-
+    environment:
+      - VITE_API_URL=http://localhost:3001
